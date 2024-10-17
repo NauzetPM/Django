@@ -1,0 +1,35 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}
+<title>Home</title>
+{% endblock title %}
+
+{% block body %} 
+<div class="container mt-4">
+  <h1 class="text-light">Tareas</h1>
+  <div class="list-group">
+    {% for task in tasks %}
+    <div class="list-group-item bg-dark text-light mb-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="title">
+          {{ task.name }}
+          <span class="ms-3">
+            <input type="checkbox" 
+                   {% if task.done %} checked {% endif %} 
+                   onchange="location.href='{% url 'tasks:toggle-task' task.slug %}'">
+          </span>
+        </div>
+        <div class="buttons">
+          <a href="{% url 'tasks:task-details' task.slug %}" class="btn btn-primary btn-sm me-2">Ver</a>
+          <a href="{% url 'tasks:edit-task' task.slug %}" class="btn btn-warning btn-sm me-2">Editar</a>
+          <form action="{% url 'tasks:delete-task' task.slug %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+          </form>
+        </div>
+      </div>
+    </div>    
+    {% endfor %}
+  </div>
+</div>
+{% endblock body %}

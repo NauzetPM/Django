@@ -1,0 +1,54 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}
+<title>Edit Task</title>
+<style>
+  .form-label {
+    color: #f8f9fa;
+  }
+</style>
+{% endblock title %}
+
+{% block body %}
+<div class="container mt-4">
+  <h1 class="text-light">Editar Tarea</h1>
+  <form method="post" class="bg-dark p-4 rounded">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+      {{ form.name }} 
+      {% if form.name.errors %}
+        <div class="text-danger">{{ form.name.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+      {{ form.description }} 
+      {% if form.description.errors %}
+        <div class="text-danger">{{ form.description.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.complete_before.id_for_label }}" class="form-label">{{ form.complete_before.label }}</label>
+      {{ form.complete_before }} 
+      {% if form.complete_before.errors %}
+        <div class="text-danger">{{ form.complete_before.errors }}</div>
+      {% endif %}
+    </div>
+
+    <div class="form-check mb-3">
+      {{ form.done }}
+      <label for="{{ form.done.id_for_label }}" class="form-check-label">{{ form.done.label }}</label>
+      {% if form.done.errors %}
+        <div class="text-danger">{{ form.done.errors }}</div>
+      {% endif %}
+    </div>
+
+    <input type="submit" value="Guardar" class="btn btn-primary">
+  </form>
+</div>
+{% endblock body %}
+

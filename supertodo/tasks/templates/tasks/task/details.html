@@ -1,0 +1,58 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}
+<title>Details</title>
+{% endblock title %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="card bg-dark text-light">
+    <div class="card-header">
+      <h2 class="card-title">{{ task.name }}</h2>
+    </div>
+    <div class="card-body">
+      <div class="dates mb-2">Creado: {{ task.created_at|date:"Y-m-d H:i" }} | Actualizado: {{ task.updated_at|date:"Y-m-d H:i" }}</div>
+      <div class="status mb-2">
+        Estado: {% if task.done %} <span class="text-success">✅ Completada</span> {% else %} <span class="text-danger">❌ Pendiente</span> {% endif %}
+      </div>
+      <div class="content mb-3">{{ task.description }}</div>
+
+      {% if task.complete_before %}
+      <div class="expected-to">
+        <strong>Fecha de vencimiento:</strong> {{ task.complete_before|date:"Y-m-d H:i" }}
+        <div id="timer" class="text-warning"></div>
+      </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+
+<script>
+  const expectedTo = new Date("{{ task.complete_before|date:'Y-m-d H:i:s' }}").getTime();
+  const timer = document.getElementById("timer");
+
+  function updateTimer() {
+    const now = new Date().getTime();
+    const distance = expectedTo - now;
+
+    if (distance < 0) {
+      timer.innerHTML = "La tarea ha vencido.";
+      clearInterval(interval);
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    timer.innerHTML = `${days} días, ${hours} horas, ${minutes} minutos, ${seconds} segundos`;
+  }
+
+  {% if task.complete_before %}
+  const interval = setInterval(updateTimer, 1000);
+  updateTimer();
+  {% endif %}
+</script>
+{% endblock body %}
